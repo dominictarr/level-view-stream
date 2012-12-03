@@ -4,11 +4,15 @@ var through = require('through')
 module.exports = function (db, viewer) {
   liveStream(db)
 
-  return function (opts) {
+  return function (opts, start, end) {
     opts = 'string' === typeof opts ? {name: opts} : opts
     var view = viewer.views[opts.name]
+
+    if(start) opts.start = start
+    if(end)   opts.end = end
+
     var range = view.bucket.range(opts.start, opts.end)
-    console.log(range)
+    
     opts.start = range.start; opts.end = range.end
 
     var ls = opts.tail === false ? db.readStream(opts) : db.liveStream(opts)
