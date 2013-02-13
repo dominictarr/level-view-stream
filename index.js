@@ -8,6 +8,9 @@ module.exports = function (db, viewer) {
     opts = 'string' === typeof opts ? {name: opts} : opts
     var view = viewer.views[opts.name]
 
+    if(!view)
+      throw new Error('view: ' +opts.name+ ' does not exist'))
+
     if(start) opts.start = start
     if(end)   opts.end = end
 
