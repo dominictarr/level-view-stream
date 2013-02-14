@@ -9,7 +9,7 @@ module.exports = function (db, viewer) {
     var view = viewer.views[opts.name]
 
     if(!view)
-      throw new Error('view: ' +opts.name+ ' does not exist'))
+      throw new Error('view: ' +opts.name+ ' does not exist')
 
     if(start) opts.start = start
     if(end)   opts.end = end
