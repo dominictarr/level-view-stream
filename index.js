@@ -20,9 +20,17 @@ module.exports = function (db, viewer) {
 
     var ls = opts.tail === false ? db.readStream(opts) : db.liveStream(opts)
 
-    return ls.pipe(through(function (data) {
-        var _data = {key: view.bucket.parse(data.key).key, value: data.value}
-        this.queue(_data)
-      })).once('close', ls.destroy.bind(ls))
+    var ts = ls.pipe(through(function (data) {
+      var _data = {key: view.bucket.parse(data.key).key, value: data.value}
+      this.queue(_data)
+    })).once('close', ls.destroy.bind(ls))
+
+    if (opts.tail !== false){
+      ls.once('sync', function () {
+        ts.emit('sync')
+      })
+    }
+
+    return ts
   }
 }
